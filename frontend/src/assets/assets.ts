@@ -73,27 +73,9 @@ import contact_img from './contact_img.png'
 import razorpay_logo from './razorpay_logo.png'
 import stripe_logo from './stripe_logo.png'
 import cross_icon from './cross_icon.png'
+import type { Assets, Product } from '../types/assets'
 
-export interface Assets {
-    logo: string;
-    hero_img: string;
-    cart_icon: string;
-    dropdown_icon: string;
-    exchange_icon: string;
-    profile_icon: string;
-    quality_icon: string;
-    search_icon: string;
-    star_dull_icon: string;
-    star_icon: string;
-    bin_icon: string;
-    support_img: string;
-    menu_icon: string;
-    about_img: string;
-    contact_img: string;
-    razorpay_logo: string;
-    stripe_logo: string;
-    cross_icon: string;
-}
+
 
 export const assets: Assets = {
     logo,
@@ -117,23 +99,8 @@ export const assets: Assets = {
 }
 
 
-export type Category = "Men" | "Women" | "Kids";
-export type SubCategory = "Topwear" | "Bottomwear" | "Winterwear";
-export type Size = "S" | "M" | "L" | "XL" | "XXL";
 
 
-export interface Product {
-    _id: string;
-    name: string;
-    description: string;
-    price: number;
-    image: string[];
-    category: Category;
-    subCategory: SubCategory;
-    sizes: Size[];
-    date: number;
-    bestseller: boolean;
-}
 
 export const products: Product[] = [
     {

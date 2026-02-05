@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState, type ChangeEvent } from 'react'
 import { ShopContext } from '../context/ShopContext'
-import { assets, type Product } from '../assets/assets';
+import { assets} from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
+import type { Product } from '../types/assets';
 
 const Collection = () => {
 
