@@ -29,6 +29,11 @@ export type Category = "Men" | "Women" | "Kids";
 export type SubCategory = "Topwear" | "Bottomwear" | "Winterwear";
 export type Size = "S" | "M" | "L" | "XL" | "XXL";
 
+interface RelatedProductsProps {
+  category: Category;
+  subCategory: SubCategory;
+}
+
 export interface Product {
   _id: string;
   name: string;
