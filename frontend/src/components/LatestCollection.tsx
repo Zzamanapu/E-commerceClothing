@@ -1,19 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title';
-import type { Product } from '../assets/assets';
 import ProductItem from './ProductItem';
+import type { ProductType } from '../types/assets';
 
 const LatestCollection = () => {
 
   const { products } = useContext(ShopContext);
-
-  const [latestProducts, SetLatestProducts] = useState<Product[]>([]);
-
-
+  console.log(products)
+  
+  const [latestProducts, SetLatestProducts] = useState<ProductType[]>([]);
+  
+  
   useEffect(() => {
     SetLatestProducts(products.slice(0, 10));
   }, [])
+  console.log(latestProducts)
 
   return (
     <div className='my-10'>

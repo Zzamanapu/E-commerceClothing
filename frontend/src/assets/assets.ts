@@ -73,7 +73,7 @@ import contact_img from './contact_img.png'
 import razorpay_logo from './razorpay_logo.png'
 import stripe_logo from './stripe_logo.png'
 import cross_icon from './cross_icon.png'
-import type { Assets, Product } from '../types/assets'
+import type { Assets, ProductType } from '../types/assets'
 
 
 
@@ -102,7 +102,7 @@ export const assets: Assets = {
 
 
 
-export const products: Product[] = [
+export const products: ProductType[] = [
     {
         _id: "aaaaa",
         name: "Women Round Neck Cotton Top",

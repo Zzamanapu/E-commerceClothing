@@ -2,17 +2,17 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title';
 import ProductItem from './ProductItem';
-import type { Product } from '../types/assets';
+import type { ProductType } from '../types/assets';
 
 const BestSeller = () => {
 
   const { products } = useContext(ShopContext);
 
-  const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [bestSellers, setBestSellers] = useState<ProductType[]>([]);
 
   useEffect(() => {
     const bestProducts = products.filter((item) => (item.bestseller));
-    console.log(bestProducts)
+    // console.log(bestProducts)
     setBestSellers(bestProducts.slice(0, 5));
   }, [])
 

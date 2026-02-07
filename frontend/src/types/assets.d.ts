@@ -34,7 +34,7 @@ interface RelatedProductsProps {
   subCategory: SubCategory;
 }
 
-export interface Product {
+export interface ProductType {
   _id: string;
   name: string;
   description: string;

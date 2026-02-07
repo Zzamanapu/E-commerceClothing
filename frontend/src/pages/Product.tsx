@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
-import type { Product } from '../types/assets';
+import type { ProductType, Size } from '../types/assets';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
 
 const Product = () => {
-  const { productId } = useParams();
-  const { products, currency } = useContext(ShopContext);
-  const [productData, setProductData] = useState<Product | null>(null);
+  const { productId } = useParams<string>();  // changed
+  const { products, currency, addToCart } = useContext(ShopContext);
+  const [productData, setProductData] = useState<ProductType | null>(null);
   const [image, setImage] = useState<string>('');
-  const [size, setSize] = useState<string>('');
+  const [size, setSize] = useState<Size | null>(null); // changed
   // console.log(`prodcut data: ${productData?.sizes}`);
   // console.log(`size: ${size}`);
 
@@ -79,7 +79,7 @@ const Product = () => {
             </div>
           </div>
 
-          <button className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button onClick={() => size && addToCart(productData._id, size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
           <hr className='text-gray-200 mt-8 sm:w-4/5' />
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
             <p>100% Orginal product.</p>

@@ -3,13 +3,13 @@ import { ShopContext } from '../context/ShopContext'
 import { assets} from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
-import type { Product } from '../types/assets';
+import type { ProductType } from '../types/assets';
 
 const Collection = () => {
 
   const { products, search, showSearch } = useContext(ShopContext);
   const [showFilter, SetShowFilter] = useState<boolean>(false);
-  const [filterProducts, setFilterProducts] = useState<Product[]>([]);
+  const [filterProducts, setFilterProducts] = useState<ProductType[]>([]);
 
   const [category, setCategory] = useState<string[]>([]);
   const [subCategory, setSubCategory] = useState<string[]>([]);

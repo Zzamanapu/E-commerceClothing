@@ -10,7 +10,7 @@ interface ProductItemProps {
 }
 
 const ProductItem = ({ id, image, name, price }: ProductItemProps) => {
-  console.log(`id id : ${id}`)
+  // console.log(`id id : ${id}`)
 
   const { currency } = useContext(ShopContext);
 

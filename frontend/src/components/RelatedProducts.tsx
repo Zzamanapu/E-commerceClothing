@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext';
-import type { Product, RelatedProductsProps } from '../types/assets';
+import type { ProductType, RelatedProductsProps } from '../types/assets';
 import Title from './Title';
 import ProductItem from './ProductItem';
 
 const RelatedProducts = ({ category, subCategory }: RelatedProductsProps) => {
   const { products } = useContext(ShopContext);
-  const [related, setRelated] = useState<Product[]>([]);
+  const [related, setRelated] = useState<ProductType[]>([]);
 
   useEffect(() => {
     if (products.length > 0) {
@@ -17,6 +17,8 @@ const RelatedProducts = ({ category, subCategory }: RelatedProductsProps) => {
       setRelated(productsCopy.slice(0, 5));
     }
   }, [products])
+
+  
   return (
     <div className='my-24'>
       <div className='text-center text-3xl py-2'>
