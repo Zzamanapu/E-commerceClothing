@@ -30,7 +30,6 @@ const ProductItem = ({ id, image, name, price }: ProductItemProps) => {
           {currency}{price}
         </p>
       </div>
-
     </Link>
   )
 }

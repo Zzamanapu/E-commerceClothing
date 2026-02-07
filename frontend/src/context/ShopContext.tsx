@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { ProductType, Size } from "../types/assets";
 import { products } from "../assets/assets";
+import { toast } from "react-toastify";
 
 type CartItemsType = {
   [productId: string]: {
@@ -23,6 +24,7 @@ interface ShopContextType {
   addToCart: (itemId: string, size: Size) => void;
 
 }
+
 export const ShopContext = createContext<ShopContextType>({
   products: [],
   currency: '$',
@@ -35,7 +37,7 @@ export const ShopContext = createContext<ShopContextType>({
   setShowSearch: () => { },
 
   cartItems: {},
-  addToCart: () => {},
+  addToCart: () => { },
 
 });
 
@@ -54,7 +56,12 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
   const [cartItems, setCartItems] = useState<CartItemsType>({});
 
   const addToCart = async (itemId: string, size: Size) => {
-    let cartData = structuredClone(cartItems);;
+    let cartData = structuredClone(cartItems);
+
+    if (!size) {
+      toast.error("Select Product Size");
+      return;
+    }
 
     if (cartData[itemId]) {
       if (cartData[itemId][size]) {
@@ -68,6 +75,36 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
       cartData[itemId] = {}
       cartData[itemId][size] = 1;
     }
+
+    // familiar logic 
+    // if (!cartData[itemId]) {
+    //   cartData[itemId] = {};
+    // }
+
+    // // ensure size count exists
+    // if (!cartData[itemId][size]) {
+    //   cartData[itemId][size] = 0;
+    // }
+
+    // // increment quantity
+    // cartData[itemId][size] += 1;
+
+
+    // advance logic
+    // cartData[itemId] = cartData[itemId] || {};
+    // cartData[itemId][size] = (cartData[itemId][size] || 0) + 1;
+
+
+    // most advance
+    // setCartItems(prev => {
+    //   const cart = structuredClone(prev);
+
+    //   cart[itemId] ??= {};
+    //   cart[itemId][size] = (cart[itemId][size] ?? 0) + 1;
+
+    //   return cart;
+    // });
+
 
     setCartItems(cartData);
   }

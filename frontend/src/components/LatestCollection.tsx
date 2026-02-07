@@ -7,7 +7,7 @@ import type { ProductType } from '../types/assets';
 const LatestCollection = () => {
 
   const { products } = useContext(ShopContext);
-  console.log(products)
+  // console.log(products)
   
   const [latestProducts, SetLatestProducts] = useState<ProductType[]>([]);
   
@@ -15,7 +15,7 @@ const LatestCollection = () => {
   useEffect(() => {
     SetLatestProducts(products.slice(0, 10));
   }, [])
-  console.log(latestProducts)
+  // console.log(latestProducts)
 
   return (
     <div className='my-10'>
