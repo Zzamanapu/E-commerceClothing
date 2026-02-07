@@ -46,3 +46,9 @@ export interface ProductType {
   date: number;
   bestseller: boolean;
 }
+
+type CartDataItem = {
+  _id: string;
+  size: string;
+  quantity: number;
+};
