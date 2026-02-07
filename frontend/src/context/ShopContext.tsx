@@ -14,9 +14,6 @@ interface ShopContextType {
   showSearch: boolean;
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
 
-  cartItems: Record<string, number>;
-  setCartItems: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-
 }
 export const ShopContext = createContext<ShopContextType>({
   products: [],
@@ -28,11 +25,6 @@ export const ShopContext = createContext<ShopContextType>({
 
   showSearch: false,
   setShowSearch: () => { },
-
-  cartItems: {},
-  setCartItems: () => { },
-
-  addToCart = (itemId , size) => { };
 
 });
 
@@ -49,26 +41,9 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
 
-  const addToCart = async (itemId: number, size: Size) => {
-    let cartData = structuredClone(cartItems);
 
-    if (cartData[itemId]) {
-      if (cartData[itemId][size]) {
-        cartData[itemId][size] += 1;
-      }
-      else {
-        cartData[itemId][size] = 1;
-      }
-    } else {
-      cartData[itemId] = {};
-      cartData[itemId][size] = 1;
-    }
 
-    setCartItems(cartData);
 
-  }
-
-  
 
   const value: ShopContextType = {
     products,
@@ -80,9 +55,6 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
 
     showSearch,
     setShowSearch,
-
-    cartItems,
-    addToCart,
   }
 
   return (
