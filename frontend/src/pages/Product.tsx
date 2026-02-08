@@ -4,7 +4,6 @@ import { ShopContext } from '../context/ShopContext';
 import type { ProductType, Size } from '../types/assets';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
-import { toast } from 'react-toastify';
 
 const Product = () => {
   const { productId } = useParams<string>();  // changed
@@ -81,10 +80,6 @@ const Product = () => {
           </div>
 
           <button onClick={() => {
-            if (!size) {
-              toast.error("Select Product Size");
-              return;
-            }
             addToCart(productData._id, size)
           }} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
           <hr className='text-gray-200 mt-8 sm:w-4/5' />

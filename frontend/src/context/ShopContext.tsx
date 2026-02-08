@@ -2,6 +2,7 @@ import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { ProductType, Size } from "../types/assets";
 import { products } from "../assets/assets";
 import { toast } from "react-toastify";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 
 type CartItemsType = {
   [productId: string]: {
@@ -21,14 +22,15 @@ interface ShopContextType {
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
 
   cartItems: CartItemsType;
-  addToCart: (itemId: string, size: Size) => void;
+  addToCart: (itemId: string, size: Size | null) => void;
 
   getCartCount: () => number;
 
   updateQuantity: (itemId: string, size: Size, quantity: number) => void;
 
-
   getCartAmount: () => number;
+
+  navigate: NavigateFunction;
 
 }
 
@@ -50,8 +52,9 @@ export const ShopContext = createContext<ShopContextType>({
 
   updateQuantity: () => { },
 
-
   getCartAmount: () => 0,
+
+  navigate: () => { },
 
 });
 
@@ -66,12 +69,17 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
 
   const [search, setSearch] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
-
   const [cartItems, setCartItems] = useState<CartItemsType>({});
+  const navigate = useNavigate();
 
 
 
-  const addToCart = async (itemId: string, size: Size) => {
+  const addToCart = async (itemId: string, size: Size | null) => {
+    if (!size) {
+      toast.error("Select Product Size");
+      return;
+    }
+
     let cartData = structuredClone(cartItems);
 
     if (cartData[itemId]) {
@@ -195,6 +203,8 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
     updateQuantity,
 
     getCartAmount,
+
+    navigate,
   }
 
   return (
