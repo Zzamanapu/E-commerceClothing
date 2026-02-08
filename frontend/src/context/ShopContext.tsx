@@ -25,6 +25,11 @@ interface ShopContextType {
 
   getCartCount: () => number;
 
+  updateQuantity: (itemId: string, size: Size, quantity: number) => void;
+
+
+  getCartAmount: () => number;
+
 }
 
 export const ShopContext = createContext<ShopContextType>({
@@ -42,6 +47,12 @@ export const ShopContext = createContext<ShopContextType>({
   addToCart: () => { },
 
   getCartCount: () => 0,
+
+  updateQuantity: () => { },
+
+
+  getCartAmount: () => 0,
+
 });
 
 
@@ -137,6 +148,31 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
     let cartData = structuredClone(cartItems);
 
     cartData[itemId][size] = quantity;
+
+    setCartItems(cartData);
+
+  }
+
+
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      let itemInfo = products.find((product) => product._id === items);
+
+      // if (!itemInfo) continue; //TS safegaurd
+
+      for (const item in cartItems[items]) {
+        try {
+          if (cartItems[items][item] > 0) {
+            totalAmount += itemInfo!.price * cartItems[items][item];
+          }
+        } catch (error) {
+
+        }
+      }
+    }
+
+    return totalAmount;
   }
 
 
@@ -156,6 +192,9 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
     addToCart,
 
     getCartCount,
+    updateQuantity,
+
+    getCartAmount,
   }
 
   return (
