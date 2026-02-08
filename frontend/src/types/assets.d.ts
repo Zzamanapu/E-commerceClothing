@@ -27,7 +27,7 @@ export interface Assets {
 
 export type Category = "Men" | "Women" | "Kids";
 export type SubCategory = "Topwear" | "Bottomwear" | "Winterwear";
-export type Size = "S" | "M" | "L" | "XL" | "XXL" | null;
+export type Size = "S" | "M" | "L" | "XL" | "XXL";
 
 interface RelatedProductsProps {
   category: Category;
@@ -49,6 +49,6 @@ export interface ProductType {
 
 type CartDataItem = {
   _id: string;
-  size: string;
+  size: Size;
   quantity: number;
 };

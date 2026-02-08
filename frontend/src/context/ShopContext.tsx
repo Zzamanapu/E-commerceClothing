@@ -58,7 +58,9 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
 
   const [cartItems, setCartItems] = useState<CartItemsType>({});
 
-  const addToCart = async (itemId: string, size: Size) => {
+
+
+  const addToCart = async (itemId: string, size: Size | null) => {
     let cartData = structuredClone(cartItems);
 
     if (!size) {
