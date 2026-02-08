@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
-import type { CartDataItem } from '../types/assets';
+import type { CartDataItem, Size } from '../types/assets';
 import Title from '../components/Title';
 import { assets } from '../assets/assets';
 
@@ -17,7 +17,7 @@ const Cart = () => {
         if (cartItems[items][item] > 0) {
           tempData.push({
             _id: items,
-            size: item,
+            size: item as Size,
             quantity: cartItems[items][item]
           })
         }
