@@ -99,9 +99,6 @@ export const assets: Assets = {
 }
 
 
-
-
-
 export const products: ProductType[] = [
     {
         _id: "aaaaa",
