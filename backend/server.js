@@ -19,6 +19,9 @@ app.use(cors())
 
 
 // api endpoints
+app.get('/api/test', (req, res) => {
+  res.json({ success: true, message: "test api is working!!" })
+})
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 
