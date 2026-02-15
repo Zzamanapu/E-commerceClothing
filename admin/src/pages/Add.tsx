@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import { assets } from '../assets/assets'
 import type { Category, Size, SubCategory } from '../types/adminTypes';
+import axios from 'axios';
+import { backendUrl } from '../App';
+import { toast } from 'react-toastify';
 
-const Add = () => {
 
+
+const Add = ({ token }: { token: string }) => {
 
 
   const [image1, setImage1] = useState<File | null>(null);
@@ -20,24 +24,49 @@ const Add = () => {
   const [sizes, setSizes] = useState<Size[]>([]);
 
 
-  const onSubmitHandler = async (e) => {
+  const onSubmitHandler = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const formData = new FormData()
+      const formData = new FormData();
       formData.append("name", name)
       formData.append("description", description)
       formData.append("price", price)
       formData.append("category", category)
       formData.append("subCategory", subCategory)
-      formData.append("bestseller", bestseller)
+      formData.append("bestseller", String(bestseller))
       formData.append("sizes", JSON.stringify(sizes))
 
       image1 && formData.append("image1", image1)
       image2 && formData.append("image2", image2)
       image3 && formData.append("image3", image3)
       image4 && formData.append("image4", image4)
+
+
+      const response = await axios.post(backendUrl + "/api/product/add", formData, { headers: { token } })
+
+      if (response.data.success) {
+        toast.success(response.data.message)
+        setName("");
+        setDescription("");
+        setImage1(null);
+        setImage2(null);
+        setImage3(null);
+        setImage4(null);
+        setPrice("");
+        // setCategory("Men");
+        // setSubCategory("Topwear");
+        // setSizes([]);
+        // setBestseller(false);
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-      
+      console.log(error)
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   }
 
@@ -94,7 +123,7 @@ const Add = () => {
       <div className='flex flex-col sm:flex-row gap-2 w-full sm:gap-8'>
         <div>
           <p className='mb-2'>Product category</p>
-          <select onChange={(e) => setCategory(e.target.value as Category)} className='w-full px-3 py-2'>
+          <select value={category} onChange={(e) => setCategory(e.target.value as Category)} className='w-full px-3 py-2'>
             <option value="Men">Men</option>
             <option value="Women">Women</option>
             <option value="Kids">Kids</option>
@@ -102,7 +131,7 @@ const Add = () => {
         </div>
         <div>
           <p className='mb-2'>Sub category</p>
-          <select onChange={(e) => setSubCategory(e.target.value as SubCategory)} className='w-full px-3 py-2'>
+          <select value={subCategory} onChange={(e) => setSubCategory(e.target.value as SubCategory)} className='w-full px-3 py-2'>
             <option value="Topwear">Topwear</option>
             <option value="Bottomwear">Bottomwear</option>
             <option value="Winterwear">Winterwear</option>
