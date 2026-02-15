@@ -1,8 +1,15 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { ProductType, Size } from "../types/assets";
-import { products } from "../assets/assets";
+// import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
+import axios from "axios";
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL as string;
+const currency = '$';
+const delivery_fee = 10;
+
+
 
 type CartItemsType = {
   [productId: string]: {
@@ -14,6 +21,8 @@ interface ShopContextType {
   products: ProductType[];
   currency: string;
   delivery_fee: number;
+
+  backendUrl: string;
 
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
@@ -30,14 +39,21 @@ interface ShopContextType {
 
   getCartAmount: () => number;
 
+
+  token: string;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+
+
   navigate: NavigateFunction;
 
 }
 
 export const ShopContext = createContext<ShopContextType>({
   products: [],
-  currency: '$',
-  delivery_fee: 10,
+  currency,
+  delivery_fee,
+
+  backendUrl,
 
   search: '',
   setSearch: () => { },
@@ -53,6 +69,9 @@ export const ShopContext = createContext<ShopContextType>({
   updateQuantity: () => { },
 
   getCartAmount: () => 0,
+
+  token: '',
+  setToken: () => { },
 
   navigate: () => { },
 
@@ -70,6 +89,8 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
   const [search, setSearch] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItemsType>({});
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [token, setToken] = useState('');
   const navigate = useNavigate();
 
 
@@ -178,11 +199,43 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
     return totalAmount;
   }
 
+  const getProductsData = async () => {
+    try {
+      const response = await axios.get(backendUrl + '/api/product/list');
+      if (response.data.success) {
+        setProducts(response.data.products)
+      }
+      else {
+        toast.error(response.data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  }
+
+  useEffect(() => {
+    getProductsData()
+  }, []);
+
+
+  useEffect(() => {
+    if(!token && localStorage.getItem("token")){
+      const newToken = localStorage.getItem("token");
+      console.log(typeof(newToken))
+      setToken(newToken)
+    }
+  }, []);
+
 
   const value: ShopContextType = {
     products,
-    currency: '$',
-    delivery_fee: 10,
+    currency,
+    delivery_fee,
 
     search,
     setSearch,
@@ -199,7 +252,12 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
 
     getCartAmount,
 
+    token,
+    setToken,
+
     navigate,
+
+    backendUrl
   }
 
   return (

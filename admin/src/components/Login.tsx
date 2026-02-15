@@ -12,7 +12,7 @@ const Login = ({ setToken }: LoginPropsType) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     try {
       event.preventDefault();
       const response = await axios.post(backendUrl + '/api/user/admin', { email, password });

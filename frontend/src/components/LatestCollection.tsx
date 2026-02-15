@@ -14,7 +14,7 @@ const LatestCollection = () => {
   
   useEffect(() => {
     SetLatestProducts(products.slice(0, 10));
-  }, [])
+  }, [products])
   // console.log(latestProducts)
 
   return (
