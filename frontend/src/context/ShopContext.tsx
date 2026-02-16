@@ -31,6 +31,7 @@ interface ShopContextType {
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
 
   cartItems: CartItemsType;
+  setCartItems: React.Dispatch<React.SetStateAction<CartItemsType>>;
   addToCart: (itemId: string, size: Size | null) => void;
 
   getCartCount: () => number;
@@ -63,6 +64,7 @@ export const ShopContext = createContext<ShopContextType>({
 
   cartItems: {},
   addToCart: () => { },
+  setCartItems: () => { },
 
   getCartCount: () => 0,
 
@@ -90,7 +92,7 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItemsType>({});
   const [products, setProducts] = useState<ProductType[]>([]);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState<string>('');
   const navigate = useNavigate();
 
 
@@ -146,6 +148,20 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
 
 
     setCartItems(cartData);
+
+    if (token) {
+      try {
+        await axios.post(backendUrl + '/api/cart/add', { itemId, size }, { headers: { token } })
+      } catch (error) {
+        console.log(error)
+        if (error instanceof Error) {
+
+          toast.error(error.message);
+        } else {
+          toast.error("Something went wrong")
+        }
+      }
+    }
   }
 
 
@@ -161,7 +177,13 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
             totalCount += cartItems[items][item];
           }
         } catch (error) {
+          console.log(error)
+          if (error instanceof Error) {
 
+            toast.error(error.message);
+          } else {
+            toast.error("Something went wrong")
+          }
         }
       }
     }
@@ -175,6 +197,22 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
     let cartData = structuredClone(cartItems);
     cartData[itemId][size] = quantity;
     setCartItems(cartData);
+
+
+    if (token) {
+      try {
+        await axios.post(backendUrl + '/api/cart/update', { itemId, size, quantity }, { headers: { token } })
+
+      } catch (error) {
+        console.log(error)
+        if (error instanceof Error) {
+
+          toast.error(error.message);
+        } else {
+          toast.error("Something went wrong")
+        }
+      }
+    }
   }
 
 
@@ -218,16 +256,35 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
     }
   }
 
+  const getUserCart = async (token: string) => {
+    try {
+      const response = await axios.post(backendUrl + '/api/cart/get', {}, { headers: { token } });
+
+      if (response.data.success) {
+        setCartItems(response.data.cartData)
+      }
+    } catch (error) {
+      console.log(error)
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  }
+
   useEffect(() => {
     getProductsData()
   }, []);
 
 
   useEffect(() => {
-    if(!token && localStorage.getItem("token")){
+    if (!token && localStorage.getItem("token")) {
       const newToken = localStorage.getItem("token");
-      console.log(typeof(newToken))
-      setToken(newToken)
+      if (newToken) {
+        setToken(newToken)
+        getUserCart(newToken);
+      }
     }
   }, []);
 
@@ -248,6 +305,8 @@ const ShopContextProvider = ({ children }: ShopContextProviderProps) => {
     addToCart,
 
     getCartCount,
+    setCartItems,
+
     updateQuantity,
 
     getCartAmount,
