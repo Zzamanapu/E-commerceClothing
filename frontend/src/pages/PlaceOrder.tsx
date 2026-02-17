@@ -70,7 +70,7 @@ export const PlaceOrder = () => {
       let orderData = {
         address: formData,
         items: orderItems,
-        amount: getCartAmount() + delivery_fee
+        amount: getCartAmount() + delivery_fee,
       }
       switch (method) {
         //api calls for COD
@@ -88,7 +88,12 @@ export const PlaceOrder = () => {
           break;
       }
     } catch (error) {
-
+      console.log(error)
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Something went wrong')
+      }
     }
 
   }
