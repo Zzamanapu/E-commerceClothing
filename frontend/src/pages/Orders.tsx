@@ -2,35 +2,89 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from '../components/Title';
 import axios from 'axios';
+import type { ProductType } from '../types/assets';
 
 const Orders = () => {
 
+  interface OrderItemType extends ProductType {
+    quantity: number;
+    size: string;
+    status: string;
+    payment: boolean;
+    paymentMethod: string;
+    date: number;
+  }
+
+  interface CartItemType extends ProductType {
+    quantity: number;
+    size: string;
+  }
+
+  interface OrderType {
+    _id: string;
+    userId: string;
+    items: CartItemType[];
+    amount: number;
+    address: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      street: string;
+      city: string;
+      state: string;
+      zipcode: string;
+      country: string;
+      phone: string;
+    };
+    status: string;
+    paymentMethod: string;
+    payment: boolean;
+    date: number;
+  }
+
   const { backendUrl, token, currency } = useContext(ShopContext);
 
-  const [orderData, setOrderData] = useState({});
+  const [orderData, setOrderData] = useState<OrderItemType[]>([]);
 
   const loadOrderData = async () => {
     try {
       if (!token) {
         return null;
       }
-      const response = await axios.post(backendUrl + '/api/order/userorders', {}, { headers: { token } })
-      console.log(response.data)
+      const response = await axios.post<{
+        success: boolean;
+        orders: OrderType[];
+      }>(backendUrl + '/api/order/userorders', {}, { headers: { token } })
 
-      if(response.data.success) {
-        let allOrdersItem = []
+      // console.log(response.data.orders[0].amount);
+      console.log(response.data.orders);
+
+      if (response.data.success) {
+
+        let allOrdersItem: OrderItemType[] = []
         response.data.orders.map((order) => {
           order.items.map((item) => {
-            item['status'] = order.status
-            item['payment'] = order.payment
-            item['paymentMethod'] = order.paymentMethod
-            item['date'] = order.date
-            allOrdersItem.push(item)
+            allOrdersItem.push({
+              ...item,
+              status: order.status,
+              payment: order.payment,
+              paymentMethod: order.paymentMethod,
+              date: order.date
+            });
+
           })
         })
-        setOrderData(allOrdersItem.reverse())
+        console.log(allOrdersItem);
+        setOrderData(allOrdersItem.reverse());
+
       }
     } catch (error) {
+      if (error instanceof Error) {
+
+        console.log(error.message)
+      } else {
+        console.log('Something went wrong')
+      }
 
     }
   }
@@ -56,10 +110,10 @@ const Orders = () => {
                   <p className='sm:text-base font-medium'>{item.name}</p>
                   <div className='flex items-center gap-3 mt-2 text-base text-gray-700'>
                     <p className='text-lg'>{currency}{item.price}</p>
-                    <p>Quantity: 1</p>
-                    <p>Size: M</p>
+                    <p>Quantity: {item.quantity}</p>
+                    <p>Size: {item.size}</p>
                   </div>
-                  <p className='mt-2'>Date: <span className='text-gray-400'>8, Feb, 2026</span></p>
+                  <p className='mt-2'>Date: <span className='text-gray-400'>{new Date(item.date).toDateString()}</span></p>
                 </div>
               </div>
 
