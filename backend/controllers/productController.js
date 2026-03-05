@@ -16,16 +16,13 @@ const addProduct = async (req, res) => {
     const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
 
     // images upload cloudinary
-    let imageData = await Promise.all(
+    let imageUrl = await Promise.all(
       images.map(async (item) => {
         let result = await cloudinary.uploader.upload(item.path, {
-          resource_type: 'image',
-          folder: 'ecommerce_app'
+          resource_type: 'image'
         });
-        return {
-          url: result.secure_url,
-          public_id: result.public_id
-        }
+        return result.secure_url
+
       })
     )
 
@@ -38,7 +35,7 @@ const addProduct = async (req, res) => {
       price: Number(price),
       bestseller: bestseller === "true" ? true : false,
       sizes: JSON.parse(sizes),
-      image: imageData,
+      image: imageUrl,
       date: Date.now()
     };
 
@@ -64,19 +61,8 @@ const listProducts = async (req, res) => {
 // fuction for removing product
 const removeProduct = async (req, res) => {
   try {
-
-    const product = await productModel.findById(req.body.id);
-
-    if (!product) {
-      return res.json({ success: false, message: "Product not found" });
-    }
-
-    for (let img of product.image) {
-      await cloudinary.uploader.destroy(img.public_id);
-    }
-
-    await productModel.findByIdAndDelete(req.body.id)
-    res.json({ success: true, message: "Product removed" })
+    await productModel.findByIdAndDelete(req.body.id);
+    res.json({ success: true, message: "Product removed" });
   } catch (error) {
     res.json({ success: false, message: error.message })
   }
